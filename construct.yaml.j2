@@ -1,11 +1,13 @@
 name: helios
-version: "2.0.0a1"
+version: {{ version }}
 channels:
   - conda-forge
+{%- if "a" in version or "b" in version %}
   - conda-forge/label/helios_dev
+{%- endif %}
 specs:
   - conda
-  - helios
+  - helios={{ version }}
   - jupyterlab
   - menuinst
 welcome_image: h++.png

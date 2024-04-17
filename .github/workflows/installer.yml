@@ -1,0 +1,84 @@
+name: Create installers
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-installer:
+    name: Build installer for ${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux-64
+          - os: windows-latest
+            platform: win-64
+          - os: macos-latest
+            platform: osx-64
+    defaults:
+      run:
+        # Conda requires a login shell in order to work properly
+        shell: bash -l {0}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create constructor dev environment
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          channels: conda-forge,defaults
+
+      - name: Install constructor and menuinst
+        run: |
+          conda install constructor menuinst
+
+      - name: Create installer
+        run: |
+          mkdir dist
+          constructor . --output-dir dist --verbose
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: installer-${{ matrix.platform }}
+          path: dist/*
+
+  test-installer:
+    name: Test installer for ${{ matrix.os }}
+    needs: [build-installer]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux-64
+          - os: windows-latest
+            platform: win-64
+          - os: macos-latest
+            platform: osx-64
+    defaults:
+      run:
+        # Conda requires a login shell in order to work properly
+        shell: bash -l {0}
+
+    steps:
+      - name: Download installer
+        uses: actions/download-artifact@v4
+        with:
+          name: installer-${{ matrix.platform }}
+          path: dist
+
+      - name: Extract installer path
+        run: |
+          echo "INSTALLER=$(ls ./dist)" >> $GITHUB_ENV
+
+      - name: Install Helios through installer
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          installer-url: file://${{ github.workspace }}/dist/${{ env.INSTALLER }}
+
+      - name: Ensure that the package is working (rudimentary)
+        run:
+          helios --version
+          python -c "import helios; print(helios.__version__)"

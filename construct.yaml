@@ -1,0 +1,14 @@
+name: helios
+version: "2.0.0a1"
+channels:
+  - conda-forge
+  - conda-forge/label/helios_dev
+specs:
+  - conda
+  - helios
+  - jupyterlab
+  - menuinst
+welcome_image: h++.png
+license_file: COPYING.LESSER
+menu_packages:
+  - helios

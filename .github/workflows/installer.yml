@@ -22,9 +22,9 @@ jobs:
             platform: linux-64
           - os: windows-latest
             platform: win-64
-          - os: macos-latest
+          - os: macos-13
             platform: osx-64
-          - os: macos-arm64-ssc
+          - os: macos-14
             platform: osx-arm64
     defaults:
       run:
@@ -74,9 +74,9 @@ jobs:
             platform: linux-64
           - os: windows-latest
             platform: win-64
-          - os: macos-latest
+          - os: macos-13
             platform: osx-64
-          - os: macos-arm64-ssc
+          - os: macos-14
             platform: osx-arm64
     defaults:
       run:

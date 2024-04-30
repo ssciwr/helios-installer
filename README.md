@@ -20,3 +20,8 @@ The installers do not only install Helios++, but also menu items to use them.
 These are installed in a separate conda package: [helios-menuinst](https://anaconda.org/conda-forge/helios-menuinst).
 The sources for this package are located directly in the [helios-menuinst-feedstock](https://github.com/conda-forge/helios-menuinst-feedstock).
 The [menuinst](https://github.com/conda/menuinst) config is located in `recipe/src/menu.json`.
+
+## Known issues
+
+* Uninstallations triggered through the App Settings in Windows do (sometimes?) throw errors.
+  Manually running the uninstaller from the installation prefix works very good though.
